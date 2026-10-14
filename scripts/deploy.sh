@@ -40,13 +40,19 @@ case "$VPS_DEPLOY_PATH" in
     echo "ERROR: ruta de despliegue no permitida: $VPS_DEPLOY_PATH" >&2; exit 1 ;;
 esac
 
-# Acceso al VPS: helper local (con credenciales) o ssh con clave.
+# Acceso al VPS: helper local (con credenciales) o ssh con clave (CI).
+# En modo CI la clave la aporta VPS_SSH_KEY (por defecto la de despliegues de
+# GitHub Actions) y el host key está fijado en .github/known_hosts: una clave
+# cambiante en el servidor rompe el despliegue, no lo acepta a ciegas.
 run_remote() {
   local cmd=$1
   if [ -n "${VPS_SSH:-}" ]; then
     bash -c "$VPS_SSH \"\$@\"" _ "$cmd"
   else
-    ssh -p "$VPS_SSH_PORT" "$VPS_USER@$VPS_HOST" "$cmd"
+    ssh -i "${VPS_SSH_KEY:-$HOME/.ssh/github-actions-deploy}" \
+        -o BatchMode=yes -o StrictHostKeyChecking=yes \
+        -o UserKnownHostsFile=.github/known_hosts \
+        -p "$VPS_SSH_PORT" "$VPS_USER@$VPS_HOST" "$cmd"
   fi
 }
 

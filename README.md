@@ -101,6 +101,18 @@ bash scripts/deploy.sh             # sube, intercambia y verifica la URL
 - El script termina comprobando que `/`, `js/main.js` y el módulo de Three.js
   devuelven 200.
 
+### Despliegue automático (GitHub Actions)
+
+El workflow **`.github/workflows/deploy.yml`** despliega en cada push a
+`main` que toque el contenido del sitio (o a mano con `workflow dispatch`).
+Usa los **secretos** `VPS_HOST`, `VPS_USER`, `VPS_SSH_PORT`,
+`VPS_DEPLOY_PATH`, `SITE_URL` y `VPS_SSH_KEY` (clave privada cuya pública
+está en `authorized_keys` del VPS); genera el `.env` al vuelo y ejecuta el
+**mismo** `scripts/deploy.sh` que en local. El host key del servidor está
+fijado en **`.github/known_hosts`**: si cambia en el VPS, el despliegue
+falla en vez de aceptar el nuevo a ciegas. Despliegues concurrentes se
+encolan (`concurrency`), nunca se cancelan a medias.
+
 ## Notas técnicas
 
 - **Unidades internas**: posiciones en UA; cada modo aplica su propio factor
