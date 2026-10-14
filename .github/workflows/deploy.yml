@@ -54,6 +54,7 @@ jobs:
             echo "SITE_URL=$SITE_URL"
           } > .env
           # La clave privada de despliegue (pública en authorized_keys del VPS).
+          mkdir -p ~/.ssh
           umask 077
           printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/vps_deploy_key
           chmod 600 ~/.ssh/vps_deploy_key
