@@ -1,6 +1,7 @@
 # Sistema Solar · Three.js
 
-**En vivo → <http://212.227.41.107/solar-system/>**
+**En vivo → <http://212.227.41.107/solar-system/>** ·
+**Repo → <https://github.com/Haddy18/solar-system-threejs>**
 
 Simulación interactiva del Sistema Solar hecha con **Three.js**: órbitas
 keplerianas reales, texturas 100 % procedurales (sin descargas), bloom,
