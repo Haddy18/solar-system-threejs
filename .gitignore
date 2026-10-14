@@ -1,0 +1,5 @@
+# Config de despliegue local (ver .env.example; en CI vendría de los secretos).
+.env
+
+# Solo por si alguien corre npm aquí: nada se instala en local.
+node_modules/
