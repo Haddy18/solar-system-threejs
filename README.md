@@ -28,6 +28,11 @@ bash start.sh
 python3 -m http.server 8080     # o: npm start
 ```
 
+`start.sh` y `start.bat` usan `scripts/dev-server.mjs` cuando hay Node: un
+servidor estático con Server-Sent Events que **recarga el navegador solo** al
+guardar cualquier fichero (`npm run dev` hace lo mismo). Sin Node caen al
+servidor estático de Python.
+
 Después abre <http://localhost:8080>.
 
 ---
@@ -78,7 +83,11 @@ js/
   noise.js            Perlin 2D + ruido de valor 3D sembrado
   camera.js           vuelos y seguimiento de cuerpos
   ui.js               HUD: tiempo, panel, chips, conmutadores
+  live.js             recarga la pestaña cuando el VPS publica una versión nueva
 vendor/three/         Three.js r186 + addons (controls, CSS2D, postprocessing)
+scripts/
+  dev-server.mjs      servidor estático local con recarga en vivo (SSE)
+  deploy.sh           despliegue atómico al VPS
 ```
 
 ## Despliegue (VPS)
@@ -98,8 +107,15 @@ bash scripts/deploy.sh             # sube, intercambia y verifica la URL
   gracias a un bloque `location /solar-system/` (con `alias`) en el virtual
   host que captura la IP; el despliegue es atómico (`…​.tmp` + intercambio),
   así que el sitio nunca queda a medias.
-- El script termina comprobando que `/`, `js/main.js` y el módulo de Three.js
-  devuelven 200.
+- El script termina comprobando que `/`, `js/main.js`, el módulo de Three.js y
+  `version.txt` devuelven 200.
+- **Recarga en vivo**: `deploy.sh` escribe `version.txt` en el servidor (dentro
+  de la carpeta temporal, antes del intercambio atómico) y `js/live.js` lo
+  sondea cada 5 s; si cambió, la pestaña abierta se recarga sola, sin F5. En
+  local no hay `version.txt`, así que el sondeo no hace nada.
+- La checklist completa para dar de alta otro proyecto de este estilo está en
+  el README de `earth-threejs` (sección «Dar de alta un proyecto nuevo en el
+  VPS»).
 
 ### Despliegue automático (GitHub Actions)
 

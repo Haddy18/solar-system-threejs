@@ -6,6 +6,7 @@
   "description": "Simulación del Sistema Solar en Three.js: órbitas keplerianas reales, texturas procedurales y controles de tiempo.",
   "scripts": {
     "start": "python -m http.server 8080",
+    "dev": "node scripts/dev-server.mjs --port 8080",
     "serve": "npx --yes serve -l 8080 ."
   }
 }
